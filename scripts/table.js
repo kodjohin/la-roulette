@@ -28,6 +28,58 @@ var tableParts = {
     'aOdd':[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35],
     'aEven':[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36]
 }
+
+var trioIDs = ["trio_0_2_3", "trio_0_1_2a",
+            "trio_1_2_3a", "trio_1_2_3b",
+            "trio_4_5_6a", "trio_4_5_6b",
+            "trio_7_8_9a", "trio_7_8_9b",
+            "trio_10_11_12a", "trio_10_11_12b",
+            "trio_13_14_15a", "trio_13_14_15b",
+            "trio_16_17_18a", "trio_16_17_18b",
+            "trio_19_20_21a", "trio_19_20_21b",
+            "trio_22_23_24a", "trio_22_23_24b",
+            "trio_25_26_27a", "trio_25_26_27b",
+            "trio_28_29_30a", "trio_28_29_30b",
+            "trio_31_32_33a", "trio_31_32_33b",
+            "trio_34_35_36a", "trio_34_35_36b"];
+
+var streetIDs = ["street_1to6a", "street_1to6b",
+            "street_4to9a", "street_4to9b",
+            "street_7to12a", "street_7to12b",
+            "street_10to15a", "street_10to15b",
+            "street_13to18a", "street_13to18b",
+            "street_16to21a", "street_16to21b",
+            "street_19to24a", "street_19to24b",
+            "street_22to27a", "street_22to27b",
+            "street_25to30a", "street_25to30b",
+            "street_28to33a", "street_28to33b",
+            "street_31to36a", "street_31to36b"];
+
+var splitIDs = ["split_0_1", "split_0_2", "split_0_3", "split_1_2", "split_2_3",
+            "split_1_4", "split_2_5", "split_3_6", "split_4_5", "split_5_6",
+            "split_4_7", "split_5_8", "split_6_9", "split_7_8", "split_8_9",
+            "split_7_10", "split_8_11", "split_9_12", "split_10_11", "split_11_12",
+            "split_10_13", "split_11_14", "split_12_15", "split_13_14", "split_14_15",
+            "split_13_16", "split_14_17", "split_15_18", "split_16_17", "split_17_18",
+            "split_16_19", "split_17_20", "split_18_21", "split_19_20", "split_20_21",
+            "split_19_22", "split_20_23", "split_21_24", "split_22_23", "split_23_24",
+            "split_22_25", "split_23_26", "split_24_27", "split_25_26", "split_26_27",
+            "split_25_28", "split_26_29", "split_27_30", "split_28_29", "split_29_30",
+            "split_28_31", "split_29_32", "split_30_33", "split_31_32", "split_32_33",
+            "split_31_34", "split_32_35", "split_33_36", "split_34_35", "split_35_36"];
+
+var cornerIDs = ["corner_1_2_4_5", "corner_2_3_5_6",
+            "corner_4_5_7_8", "corner_5_6_8_9",
+            "corner_7_8_10_11", "corner_8_9_11_12",
+            "corner_10_11_13_14", "corner_11_12_14_15",
+            "corner_13_14_16_17", "corner_14_15_17_18",
+            "corner_16_17_19_20", "corner_17_18_20_21",
+            "corner_19_20_22_23", "corner_20_21_23_24",
+            "corner_22_23_25_26", "corner_23_24_26_27",
+            "corner_25_26_28_29", "corner_26_27_29_30",
+            "corner_28_29_31_32", "corner_29_30_32_33",
+            "corner_31_32_34_35", "corner_32_33_35_36"];
+
 var color = '#eee';
 var blockSpace = 5;
 var tableGr = new Group();
@@ -37,6 +89,11 @@ var upperGr = new Group();
 var lowerGr = new Group();
 var rightGr = new Group();
 
+var streetGr = new Group();
+var trioGr = new Group();
+var cornerGr = new Group();
+var splitGr = new Group();
+
 var numberedBoxes = [];
 
 drawNumberedBoxes({group:numberedGr, initialX:0, initialY:200});
@@ -45,7 +102,12 @@ drawTextBoxes({group:upperGr, size:new Size(70*4+6, 80), data:upperRow, id:upper
 drawTextBoxes({group:lowerGr, size:new Size(70*2+2, 80), data:lowerRow, id:lowerIDs, rotation:0, align:'horizontal'});
 drawTextBoxes({group:rightGr, size:new Size(70, 100), data:rightColumn, id:rightIDs, rotation:-90, align:'vertical'});
 
-createGroup({group:tableGr, items:[zeroGr,numberedGr, upperGr, lowerGr, rightGr]});
+drawStreetBoxes({group:streetGr, id:streetIDs, initialX:206, initialY:375});
+drawTrioBoxes({group:trioGr, id:trioIDs, initialX:160, initialY:375});
+drawCornerBoxes({group:cornerGr, id:cornerIDs, initialX:206, initialY:280});
+drawSplitBoxes({group:splitGr, id:splitIDs, initialX:98, initialY:300});
+
+createGroup({group:tableGr, items:[zeroGr,numberedGr, upperGr, lowerGr, rightGr, streetGr, trioGr, cornerGr, splitGr]});
 
 zeroGr.position.y += 85;
 numberedGr.position.x += zeroGr.getBounds().width + blockSpace;
@@ -81,12 +143,10 @@ function drawNumberedBox(obj){
 
     var boxHandlers = {
         mouseenter: function(event) {
-            box.fillColor = 'blue';
-            box.opacity = .2;
+            box.fillColor = '#ccc';
         },
         mouseleave: function(event) {
             box.fillColor = '#eee';
-            box.opacity = 1;
         }
     }
     box.on(boxHandlers);
@@ -133,8 +193,7 @@ function drawTextBox(obj){
 
     var boxHandlers = {
         mouseenter: function(event) {
-            box.fillColor = 'blue';
-            box.opacity = .2;
+            box.fillColor = '#ccc';
             for (var key in tableParts) {
                 if(box.ID===key.substring(1)){
                     highlightBoxes(tableParts[key], true);
@@ -143,7 +202,6 @@ function drawTextBox(obj){
         },
         mouseleave: function(event) {
             box.fillColor = '#eee';
-            box.opacity = 1;
             for (var key in tableParts) {
                 if(box.ID===key.substring(1)){
                     highlightBoxes(tableParts[key], false);
@@ -169,6 +227,189 @@ function drawTextBoxes(obj){
     }
 }
 
+function drawStreetBoxes(obj){
+    var point = new Point(obj.initialX,obj.initialY);
+    var size = new Size(20, 20);
+
+    for (var i = 0; i < 22; i++) {
+        if(i>0 && i%2===0){
+            point.y = obj.initialY;
+            point.x += size.width + 52;
+        }
+        var box = new Path.Rectangle(point,size);
+        box.fillColor = 'red';
+        box.opacity = 0;
+        box.ID = obj.id[i];
+        point.y -= size.height + 275;
+        createGroup({group:streetGr, items:[box]})
+        var boxHandlers = {
+            mouseenter: function(event) {
+                var box = event.target;
+                //console.log(box.ID);
+                var beginning = Number(box.ID.split("to")[0].split("_")[1]);
+                var end = Number(box.ID.split("to")[1].split(box.ID.split("to")[1].substr(-1, 1))[0]);
+                //console.log(beginning,"****",end);
+                var tablePart = [];
+                for (var j = beginning; j <= end; j++) {
+                    tablePart.push(j);
+                }
+                highlightBoxes(tablePart, true);
+            },
+            mouseleave: function(event) {
+                var box = event.target;
+                var beginning = Number(box.ID.split("to")[0].split("_")[1]);
+                var end = Number(box.ID.split("to")[1].split(box.ID.split("to")[1].substr(-1, 1))[0]);
+                var tablePart = [];
+                for (var j = beginning; j <= end; j++) {
+                    tablePart.push(j);
+                }
+                highlightBoxes(tablePart, false);
+            }
+        }
+        box.on(boxHandlers);
+
+    }
+
+}
+function drawTrioBoxes(obj){
+    var point = new Point(obj.initialX,obj.initialY);
+    var size = new Size(40, 20);
+
+    for (var i = 0; i < 24; i++) {
+        if(i>0 && i%2===0){
+            point.y = obj.initialY;
+            point.x += size.width + 32;
+        }
+        var box = new Path.Rectangle(point,size);
+        box.fillColor = 'red';
+        box.opacity = 0;
+        box.ID = obj.id[i+2];
+        point.y -= size.height + 275;
+        createGroup({group:trioGr, items:[box]})
+        var boxHandlers = {
+            mouseenter: function(event) {
+                var box = event.target;
+                //console.log(box.ID);
+                var beginning = Number(box.ID.split("_")[1]);
+                var end = Number(box.ID.split("_")[3].split(box.ID.split("_")[3].substr(-1, 1))[0]);
+                //console.log(beginning, "*****", end);
+                var tablePart = [];
+                for (var j = beginning; j <= end; j++) {
+                    tablePart.push(j);
+                }
+                highlightBoxes(tablePart, true);
+            },
+            mouseleave: function(event) {
+                var box = event.target;
+                //console.log(box.ID);
+                var beginning = Number(box.ID.split("_")[1]);
+                var end = Number(box.ID.split("_")[3].split(box.ID.split("_")[3].substr(-1, 1))[0]);
+                //console.log(beginning, "*****", end);
+                var tablePart = [];
+                for (var j = beginning; j <= end; j++) {
+                    tablePart.push(j);
+                }
+                highlightBoxes(tablePart, false);
+            }
+        }
+        box.on(boxHandlers);
+    }
+}
+
+function drawCornerBoxes(obj){
+    var point = new Point(obj.initialX,obj.initialY);
+    var size = new Size(20, 20);
+
+    for (var i = 0; i < 22; i++) {
+        if(i>0 && i%2===0){
+            point.y = obj.initialY;
+            point.x += size.width + 52;
+        }
+        var box = new Path.Rectangle(point,size);
+        box.fillColor = 'red';
+        box.opacity = 0;
+        box.ID = obj.id[i];
+        point.y -= size.height + 83;
+        createGroup({group:cornerGr, items:[box]})
+        var boxHandlers = {
+            mouseenter: function(event) {
+                var box = event.target;
+                //console.log(box.ID);
+                var tablePart = box.ID.split("_");
+                tablePart.shift();
+                highlightBoxes(tablePart, true);
+            },
+            mouseleave: function(event) {
+                var box = event.target;
+                var tablePart = box.ID.split("_");
+                tablePart.shift();
+                highlightBoxes(tablePart, false);
+            }
+        }
+        box.on(boxHandlers);
+    }
+}
+
+function drawSplitBoxes(obj){
+    var point = new Point(obj.initialX,obj.initialY);
+    var size;
+    var col=1;
+    for (var i = 0; i < splitIDs.length; i++) {
+        size = new Size(20, 80);
+        if(i%5 === 0){
+            col = col +1;
+            point.y = obj.initialY;
+            point.x += size.width + 16;
+        }
+        else if(i%3===0){
+            col = col +1;
+            point.y = obj.initialY;
+            point.x += size.width + 16;
+        }
+        if(col%2 !== 0){
+            size = new Size(30, 20);
+        }
+        console.log(col);
+        var box = new Path.Rectangle(point,size);
+        box.fillColor = 'blue';
+        //box.opacity = 0;
+        box.ID = obj.id[i];
+        if(col%2 !== 0){
+            point.y -= size.height + 12;
+        }
+        else{
+            point.y -= size.height + 22;
+        }
+
+        createGroup({group:splitGr, items:[box]})
+        var boxHandlers = {
+            mouseenter: function(event) {
+                var box = event.target;
+                console.log(box.ID);
+                var beginning = Number(box.ID.split("_")[0].split("_")[1]);
+                /* var end = Number(box.ID.split("to")[1].split(box.ID.split("to")[1].substr(-1, 1))[0]);
+                 //console.log(beginning,"****",end);
+                 var tablePart = [];
+                 for (var j = beginning; j <= end; j++) {
+                 tablePart.push(j);
+                 }
+                 highlightBoxes(tablePart, true);*/
+            },
+            mouseleave: function(event) {
+                var box = event.target;
+                /*var beginning = Number(box.ID.split("to")[0].split("_")[1]);
+                 var end = Number(box.ID.split("to")[1].split(box.ID.split("to")[1].substr(-1, 1))[0]);
+                 var tablePart = [];
+                 for (var j = beginning; j <= end; j++) {
+                 tablePart.push(j);
+                 }
+                 highlightBoxes(tablePart, false);*/
+            }
+        }
+        box.on(boxHandlers);
+    }
+}
+
 function createGroup(obj){
     var gr = obj.group;
     gr.addChildren(obj.items);
@@ -179,12 +420,10 @@ function highlightBoxes(arr, over){
     for (var i = 0; i < arr.length; i++) {
         var box = numberedBoxes[arr[i]-1];
         if(over){
-            box.fillColor = 'blue';
-            box.opacity = .2;
+            box.fillColor = '#ccc';
         }
         else{
             box.fillColor = '#eee';
-            box.opacity = 1;
         }
     }
 }
